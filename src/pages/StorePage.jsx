@@ -63,10 +63,17 @@ import { LABORATORIES, CATEGORIES } from '../config/catalog';
 import Reveal from '../components/Reveal';
 import heroImg from '../assets/hero.png';
 
-const WHATSAPP_NUMBER = '593999999999';
+const WHATSAPP_NUMBER = '593980892245';
 const WHATSAPP_GREETING = encodeURIComponent(
   'Hola *Selva Tropical*, quisiera información sobre sus productos naturales.'
 );
+
+const CONTACT_EMAIL = 'todoesnatural1.2@gmail.com';
+const EMAIL_SUBJECT = 'Hola Selva Tropical';
+const EMAIL_BODY = 'Hola Selva Tropical,\n\nQuisiera información sobre sus productos naturales.';
+const GMAIL_COMPOSE_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT_EMAIL}&su=${encodeURIComponent(
+  EMAIL_SUBJECT
+)}&body=${encodeURIComponent(EMAIL_BODY)}`;
 
 function scrollTo(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1119,15 +1126,17 @@ export default function StorePage() {
                   size="sm"
                   style={{ display: 'flex', alignItems: 'center', gap: 8 }}
                 >
-                  <IconBrandWhatsapp size={15} color="#8ce99a" /> +593 99 999 9999
+                  <IconBrandWhatsapp size={15} color="#8ce99a" /> +593 98 089 2245
                 </Anchor>
                 <Anchor
-                  href="mailto:hola@selvatropical.com"
+                  href={GMAIL_COMPOSE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   c="rgba(207,228,218,0.8)"
                   size="sm"
                   style={{ display: 'flex', alignItems: 'center', gap: 8 }}
                 >
-                  <IconMail size={15} color="#8ce99a" /> hola@selvatropical.com
+                  <IconMail size={15} color="#8ce99a" /> {CONTACT_EMAIL}
                 </Anchor>
                 <Group gap={8} wrap="nowrap">
                   <IconClock size={15} color="#8ce99a" />

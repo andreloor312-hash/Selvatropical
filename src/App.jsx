@@ -7,6 +7,7 @@ import { useProductStore } from './store/useProductStore';
 import Navbar from './components/Navbar';
 import AuthModal from './components/AuthModal';
 import StorePage from './pages/StorePage';
+import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
   const setUser = useAuthStore((state) => state.setUser);
@@ -30,6 +31,7 @@ export default function App() {
       <AuthModal />
       <Routes>
         <Route path="/" element={<StorePage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
