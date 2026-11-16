@@ -1,26 +1,39 @@
 import { Group, Text, Image } from '@mantine/core';
-import logoImg from '../assets/logo.png';
+import logoImg from '../assets/Logo.png';
 
 export default function BrandLogo({ size = 'md' }) {
-  const iconHeight = size === 'lg' ? 48 : 40;
-  const titleSize = size === 'lg' ? '1.35rem' : '1.15rem';
+  const iconHeight = size === 'lg' ? 46 : 38;
+  const titleSize = size === 'lg' ? '1.35rem' : '1.12rem';
 
   return (
-    <Group gap="xs" wrap="nowrap" style={{ userSelect: 'none' }}>
+    <Group gap={10} wrap="nowrap" style={{ userSelect: 'none' }}>
       <Image
         src={logoImg}
         alt="Selva Tropical"
         h={iconHeight}
         w="auto"
         fit="contain"
-        radius="sm"
+        style={{ filter: 'drop-shadow(0 4px 10px rgba(6, 51, 38, 0.18))' }}
       />
 
-      <div style={{ lineHeight: 1.1 }}>
-        <Text fw={800} style={{ fontSize: titleSize, letterSpacing: '-0.4px' }} c="dark.8">
-          Selva<Text span c="teal.7" inherit>Tropical</Text>
+      <div style={{ lineHeight: 1.05 }}>
+        <Text
+          fw={800}
+          style={{ fontSize: titleSize, letterSpacing: '-0.045em' }}
+          c="dark.8"
+        >
+          Selva
+          <Text span c="teal.7" inherit>
+            Tropical
+          </Text>
         </Text>
-        <Text size="10px" fw={600} tt="uppercase" c="dimmed" style={{ letterSpacing: '1.2px' }}>
+        <Text
+          size="9px"
+          fw={700}
+          tt="uppercase"
+          c="dimmed"
+          style={{ letterSpacing: '1.8px' }}
+        >
           Medicina Natural
         </Text>
       </div>

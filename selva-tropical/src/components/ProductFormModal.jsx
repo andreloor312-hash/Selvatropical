@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Modal,
   TextInput,
@@ -9,64 +9,26 @@ import {
   Stack,
   Switch,
   Group,
+  ThemeIcon,
+  Text,
+  Box,
 } from '@mantine/core';
+import { IconPackage } from '@tabler/icons-react';
 import { useProductStore } from '../store/useProductStore';
+import { LABORATORIES, CATEGORIES } from '../config/catalog';
 
-export const LABORATORIES = [
-  'LABMAC',
-  'HERBALMAX',
-  'NATURAL FACTORS',
-  "NATURE'S PHARMA",
-  "NATURE'S GARDEN",
-  'OMNILIFE',
-  'NUTRIFIT',
-  'SUN VITAMINS',
-];
-
-export const CATEGORIES = [
-  'Vitaminas y Minerales',
-  'Colágeno y Articulaciones',
-  'Sistema Inmune',
-  'Digestión y Detox',
-  'Energía y Rendimiento',
-  'Control de Peso',
-  'Cuidado Natural',
-];
-
-export default function ProductFormModal({ opened, onClose, productToEdit }) {
+function ProductForm({ productToEdit, onClose }) {
   const { addProduct, updateProduct } = useProductStore();
 
-  const [name, setName] = useState('');
-  const [laboratory, setLaboratory] = useState(LABORATORIES[0]);
-  const [category, setCategory] = useState(CATEGORIES[0]);
-  const [price, setPrice] = useState(0);
-  const [stock, setStock] = useState(10);
-  const [image, setImage] = useState('');
-  const [description, setDescription] = useState('');
-  const [active, setActive] = useState(true);
+  const [name, setName] = useState(productToEdit?.name || '');
+  const [laboratory, setLaboratory] = useState(productToEdit?.laboratory || LABORATORIES[0]);
+  const [category, setCategory] = useState(productToEdit?.category || CATEGORIES[0]);
+  const [price, setPrice] = useState(productToEdit?.price ?? 0);
+  const [stock, setStock] = useState(productToEdit?.stock ?? 10);
+  const [image, setImage] = useState(productToEdit?.image || '');
+  const [description, setDescription] = useState(productToEdit?.description || '');
+  const [active, setActive] = useState(productToEdit?.active ?? true);
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (productToEdit) {
-      setName(productToEdit.name || '');
-      setLaboratory(productToEdit.laboratory || LABORATORIES[0]);
-      setCategory(productToEdit.category || CATEGORIES[0]);
-      setPrice(productToEdit.price ?? 0);
-      setStock(productToEdit.stock ?? 0);
-      setImage(productToEdit.image || '');
-      setDescription(productToEdit.description || '');
-      setActive(productToEdit.active ?? true);
-    } else {
-      setName('');
-      setLaboratory(LABORATORIES[0]);
-      setCategory(CATEGORIES[0]);
-      setPrice(0);
-      setStock(10);
-      setImage('');
-      setDescription('');
-      setActive(true);
-    }
-  }, [productToEdit, opened]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,94 +59,128 @@ export default function ProductFormModal({ opened, onClose, productToEdit }) {
   };
 
   return (
+    <form onSubmit={handleSubmit}>
+      <Stack>
+        <TextInput
+          label="Nombre del producto"
+          placeholder="Ej. Colágeno Hidrolizado + Vitamina C"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+
+        <Group grow>
+          <Select
+            label="Laboratorio"
+            placeholder="Selecciona laboratorio"
+            data={LABORATORIES}
+            value={laboratory}
+            onChange={setLaboratory}
+            searchable
+            required
+          />
+
+          <Select
+            label="Categoría"
+            placeholder="Selecciona categoría"
+            data={CATEGORIES}
+            value={category}
+            onChange={setCategory}
+            searchable
+            required
+          />
+        </Group>
+
+        <Group grow>
+          <NumberInput
+            label="Precio (USD)"
+            min={0}
+            decimalScale={2}
+            prefix="$"
+            value={price}
+            onChange={setPrice}
+            required
+          />
+
+          <NumberInput
+            label="Stock disponible"
+            min={0}
+            allowDecimal={false}
+            value={stock}
+            onChange={setStock}
+            required
+          />
+        </Group>
+
+        <TextInput
+          label="URL de imagen"
+          placeholder="https://..."
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
+        />
+
+        <Textarea
+          label="Descripción y modo de uso"
+          placeholder="Presentación, beneficios y posología..."
+          minRows={3}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        />
+
+        <Switch
+          label="Producto visible en tienda"
+          checked={active}
+          onChange={(e) => setActive(e.currentTarget.checked)}
+          color="teal"
+        />
+
+        <Button
+          type="submit"
+          color="teal"
+          variant="gradient"
+          gradient={{ from: 'teal.7', to: 'green.5', deg: 120 }}
+          loading={saving}
+          fullWidth
+          size="md"
+          mt="xs"
+        >
+          {productToEdit ? 'Guardar cambios' : 'Publicar producto'}
+        </Button>
+      </Stack>
+    </form>
+  );
+}
+
+export default function ProductFormModal({ opened, onClose, productToEdit }) {
+  return (
     <Modal
       opened={opened}
       onClose={onClose}
-      title={productToEdit ? 'Editar Producto' : 'Nuevo Producto — Selva Tropical'}
+      title={
+        <Group gap="sm">
+          <ThemeIcon size={38} radius="lg" variant="light" color="teal">
+            <IconPackage size={20} />
+          </ThemeIcon>
+          <Box>
+            <Text fw={800} size="md" lh={1.2}>
+              {productToEdit ? 'Editar producto' : 'Nuevo producto'}
+            </Text>
+            <Text size="xs" c="dimmed" fw={500}>
+              Selva Tropical · Catálogo
+            </Text>
+          </Box>
+        </Group>
+      }
       size="md"
       centered
+      radius="xl"
     >
-      <form onSubmit={handleSubmit}>
-        <Stack>
-          <TextInput
-            label="Nombre del producto"
-            placeholder="Ej. Colágeno Hidrolizado + Vitamina C"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-
-          <Group grow>
-            <Select
-              label="Laboratorio"
-              placeholder="Selecciona laboratorio"
-              data={LABORATORIES}
-              value={laboratory}
-              onChange={setLaboratory}
-              searchable
-              required
-            />
-
-            <Select
-              label="Categoría"
-              placeholder="Selecciona categoría"
-              data={CATEGORIES}
-              value={category}
-              onChange={setCategory}
-              searchable
-              required
-            />
-          </Group>
-
-          <Group grow>
-            <NumberInput
-              label="Precio (USD)"
-              min={0}
-              decimalScale={2}
-              prefix="$"
-              value={price}
-              onChange={setPrice}
-              required
-            />
-
-            <NumberInput
-              label="Stock disponible"
-              min={0}
-              allowDecimal={false}
-              value={stock}
-              onChange={setStock}
-              required
-            />
-          </Group>
-
-          <TextInput
-            label="URL de imagen"
-            placeholder="https://..."
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
-
-          <Textarea
-            label="Descripción y modo de uso"
-            placeholder="Presentación, beneficios y posología..."
-            minRows={3}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-
-          <Switch
-            label="Producto visible en tienda"
-            checked={active}
-            onChange={(e) => setActive(e.currentTarget.checked)}
-            color="teal"
-          />
-
-          <Button type="submit" color="teal" loading={saving} fullWidth mt="xs">
-            {productToEdit ? 'Guardar cambios' : 'Publicar producto'}
-          </Button>
-        </Stack>
-      </form>
+      <ProductForm
+        key={productToEdit?.id || 'new'}
+        productToEdit={productToEdit}
+        onClose={onClose}
+      />
     </Modal>
   );
 }
